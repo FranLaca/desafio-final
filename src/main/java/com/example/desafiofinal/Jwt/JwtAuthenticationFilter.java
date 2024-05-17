@@ -11,6 +11,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
@@ -34,19 +35,41 @@ public class JwtAuthenticationFilter  extends OncePerRequestFilter {
             return;
         }
         username= jwtService.getUsernameFromToken(token);
-        if(username!=null && SecurityContextHolder.getContext().getAuthentication()==null)
+        if(username == null)
         {
-            UserDetails userDetails= userDetailsService.loadUserByUsername(username);
-            if(jwtService.isTokenValid(token,userDetails))
+            response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inválido");
+            return;
+        }
+
+        System.out.print("el username es :"+ username);
+
+        if(SecurityContextHolder.getContext().getAuthentication()==null)
+        {
+            try
             {
-                UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
-                        userDetails,
-                        null,
-                        userDetails.getAuthorities()
-                );
-                authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(authToken);
+                UserDetails userDetails= userDetailsService.loadUserByUsername(username);
+                if(jwtService.isTokenValid(token,userDetails))
+                {
+                    System.out.print("el username es :"+ username);
+                    UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
+                            userDetails,
+                            null,
+                            userDetails.getAuthorities()
+                    );
+                    authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                    SecurityContextHolder.getContext().setAuthentication(authToken);
+                }
+               else
+                {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Token inválido");
+                }
             }
+            catch (UsernameNotFoundException e)
+            {
+                response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Usuario no encontrado");
+                return;
+            }
+
         }
         filterChain.doFilter(request,response);
     }
@@ -54,7 +77,8 @@ public class JwtAuthenticationFilter  extends OncePerRequestFilter {
     private String getTokenFromRequest(HttpServletRequest request) {
         final String authHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
 
-        if(StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer ")){
+        if(StringUtils.hasText(authHeader) && authHeader.startsWith("Bearer "))
+        {
             return authHeader.substring(7);
         }
         return  null;

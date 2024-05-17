@@ -21,14 +21,18 @@ public class ApiRest {
         response.put("message", "online");
         return new ResponseEntity<>(response, HttpStatus.OK);
     }
-    @GetMapping(value = "/telemetry")
-    @ResponseBody
-    public ResponseEntity<Map<String,String>>sendTelemetria(){
-        return null;
+
+    @GetMapping("/telemetry")
+    public ResponseEntity<Map<String, String>> sendTelemetry() {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Telemetry no Implementadda");
+        return new ResponseEntity<>(response, HttpStatus.NOT_IMPLEMENTED);
     }
-    @PostMapping(value = "/instructions")
-    @ResponseBody
-    public ResponseEntity<Map<String,String>>reciveIntrucciones(){
-        return null;
+
+    @PostMapping("/instructions")
+    public ResponseEntity<Map<String, String>> receiveInstructions() {
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Instructions.");
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 }

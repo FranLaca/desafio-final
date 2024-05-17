@@ -1,6 +1,7 @@
 package com.example.desafiofinal.model;
 
-public enum Roles {
+public enum Roles
+{
     TIERRA,
     USER;
 }

@@ -11,12 +11,14 @@ import java.util.Map;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
-public class AuthController {
+public class AuthController
+{
 
     private final AuthService authService;
     @GetMapping(value = "/status")
     @ResponseBody
-    public ResponseEntity<Map> status() {
+    public ResponseEntity<Map> status()
+    {
         Map response = new HashMap();
         response.put("status", "OK");
         response.put("code", "200");

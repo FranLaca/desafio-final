@@ -31,7 +31,8 @@ public class AuthService {
                 .token(token)
                 .build();
     }
-    public AuthResponse register(RegisterRequest request){
+    public AuthResponse register(RegisterRequest request)
+    {
         String PasswordEncoder = passwordEncoder.encode(request.getPassword());
         User user = User.builder()
                 .username(request.getUsername())

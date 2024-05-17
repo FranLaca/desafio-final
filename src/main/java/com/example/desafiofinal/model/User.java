@@ -15,7 +15,8 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "usuario", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
-public class User implements UserDetails {
+public class User implements UserDetails
+{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;

@@ -7,10 +7,12 @@ import org.springframework.http.converter.json.MappingJackson2HttpMessageConvert
 import org.springframework.web.client.RestTemplate;
 
 @Configuration
-public class AppContext {
+public class AppContext
+{
 
     @Bean
-    RestTemplate restTemplate() {
+    RestTemplate restTemplate()
+    {
         RestTemplate restTemplate = new RestTemplate();
         MappingJackson2HttpMessageConverter converter = new MappingJackson2HttpMessageConverter();
         converter.setObjectMapper(new ObjectMapper());

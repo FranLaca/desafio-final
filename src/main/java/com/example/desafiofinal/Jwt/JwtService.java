@@ -29,7 +29,8 @@ public class JwtService {
     public String getToken(UserDetails user){
         return getToken(new HashMap<>(),user);
     }
-    private  String getToken(Map<String,Object>extraClaims,UserDetails user){
+    private  String getToken(Map<String,Object>extraClaims,UserDetails user)
+    {
         Set<String> roles= user.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority).collect(Collectors.toSet());
         extraClaims.put("rol", roles);
@@ -42,7 +43,8 @@ public class JwtService {
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
-    private Key getKey(){
+    private Key getKey()
+    {
         byte[] keyBytes= Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
     }
