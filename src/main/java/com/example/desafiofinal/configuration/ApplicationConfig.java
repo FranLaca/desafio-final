@@ -1,9 +1,13 @@
 package com.example.desafiofinal.configuration;
 
+import com.example.desafiofinal.model.Singleton.Nave;
+import com.example.desafiofinal.model.Singleton.Tierra;
 import com.example.desafiofinal.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Scope;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -43,5 +47,17 @@ public class ApplicationConfig
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+    public Tierra singletonBean() {
+        return new Tierra();
+    }
+
+    @Bean
+    @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+    public Nave anotherSingletonBean() {
+        return new Nave();
     }
 }

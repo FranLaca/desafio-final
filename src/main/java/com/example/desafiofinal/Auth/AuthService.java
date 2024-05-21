@@ -1,7 +1,7 @@
 package com.example.desafiofinal.Auth;
 
 
-import com.example.desafiofinal.Jwt.JwtService;
+import com.example.desafiofinal.Auth.Jwt.JwtService;
 import com.example.desafiofinal.model.Roles;
 import com.example.desafiofinal.model.User;
 import com.example.desafiofinal.repository.UserRepository;

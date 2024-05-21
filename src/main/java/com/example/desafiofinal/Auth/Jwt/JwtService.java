@@ -1,4 +1,4 @@
-package com.example.desafiofinal.Jwt;
+package com.example.desafiofinal.Auth.Jwt;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

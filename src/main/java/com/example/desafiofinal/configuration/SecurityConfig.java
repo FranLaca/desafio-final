@@ -1,6 +1,6 @@
 package com.example.desafiofinal.configuration;
 
-import com.example.desafiofinal.Jwt.JwtAuthenticationFilter;
+import com.example.desafiofinal.Auth.Jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
