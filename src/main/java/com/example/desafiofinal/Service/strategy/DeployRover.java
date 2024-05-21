@@ -13,6 +13,11 @@ public class DeployRover implements InstructionsStrategy
     @Override
     public String execute()
     {
-        return "deploy";
+        return "Deploy exitoso!";
+    }
+
+    @Override
+    public String obtenerDatos() {
+        return "Coordenadas -85,456 , 120,365";
     }
 }

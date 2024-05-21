@@ -1,5 +1,6 @@
 package com.example.desafiofinal.model;
 
+import com.example.desafiofinal.Service.strategy.InstructionsEnum;
 import com.example.desafiofinal.model.Singleton.Nave;
 import com.example.desafiofinal.model.Singleton.Tierra;
 import jakarta.persistence.*;
@@ -24,6 +25,10 @@ public class Telemetry
     @ManyToOne
     @JoinColumn(name = "nave_id", nullable = false)
     private Nave nave;
+
+    @Column
+    private InstructionsEnum tipoDato;
+
     @Column(name = "datos", nullable = false)
     private String datos;
 }

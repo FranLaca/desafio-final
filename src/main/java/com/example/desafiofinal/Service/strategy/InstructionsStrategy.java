@@ -4,5 +4,6 @@ public interface InstructionsStrategy
 {
     InstructionsEnum getTipoInstruction();
     String execute();
+    String obtenerDatos();
 
 }

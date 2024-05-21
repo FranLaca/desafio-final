@@ -15,4 +15,9 @@ public class CollectSample implements InstructionsStrategy
     {
         return "Recogiendo muestras del suelo";
     }
+
+    @Override
+    public String obtenerDatos() {
+        return "Se encontraron minerales";
+    }
 }

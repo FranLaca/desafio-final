@@ -13,7 +13,12 @@ public class Scan implements InstructionsStrategy
     @Override
     public String execute()
     {
-        return "Scan Exitoso";
+        return "Scaneo Exitoso!";
 
+    }
+
+    @Override
+    public String obtenerDatos() {
+        return "Perimetro habilitado para explorar";
     }
 }
