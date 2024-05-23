@@ -85,5 +85,40 @@ public class AuthController
             return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+    @PostMapping(value = "/register")
+    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request)
+    {
+        try
+        {
+            return ResponseEntity.ok(authService.register(request));
+        } catch (IllegalArgumentException e)
+        {
+            Map<String, String> response = new HashMap<>();
+            response.put("status", "BAD_REQUEST");
+            response.put("code", "400");
+            response.put("message", e.getMessage());
+            return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
+        } catch (HttpMessageNotReadableException e)
+        {
+            Map<String, String> response = new HashMap<>();
+            response.put("status", "BAD_REQUEST");
+            response.put("code", "400");
+            response.put("message", "Revise los campos de la solicitud: " + e.getMessage());
+            return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
+        } catch (DataIntegrityViolationException e)
+        {
+            Map<String, String> response = new HashMap<>();
+            response.put("status", "INTERNAL_SERVER_ERROR");
+            response.put("code", "500");
+            response.put("message", "Data integrity violation: " + e.getMessage());
+            return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (Exception e)
+        {
+            Map<String, String> response = new HashMap<>();
+            response.put("status", "INTERNAL_SERVER_ERROR");
+            response.put("code", "500");
+            response.put("message", e.getMessage());
+            return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
