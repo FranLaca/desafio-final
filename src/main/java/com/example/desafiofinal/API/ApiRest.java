@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.Map;
@@ -66,13 +67,18 @@ public class ApiRest {
             response.put("Tipo de instruccion", String.valueOf(instruction.getTipoInstruccion()));
             response.put("Tipo de respuesta",respuesta);
             return new ResponseEntity<>(response, HttpStatus.OK);
-        } catch (IllegalArgumentException e)
+        }
+        catch (IllegalArgumentException e)
         {
             return handleIllegalArgumentException(e);
         }
         catch (HttpMessageNotReadableException e)
         {
             return handleBadRequestException(e);
+        }
+        catch (AuthenticationException e)
+        {
+            return handleAuthenticationException(e);
         }
         catch (DataIntegrityViolationException e)
         {
@@ -107,7 +113,8 @@ public class ApiRest {
             response.put("Contenido de telemetria",datos);
             return new ResponseEntity<>(response, HttpStatus.OK);
 
-        }catch (IllegalArgumentException e)
+        }
+        catch (IllegalArgumentException e)
         {
             return handleIllegalArgumentException(e);
         }
@@ -118,6 +125,10 @@ public class ApiRest {
         catch (DataIntegrityViolationException e)
         {
             return handleInternalServerErrorUnique(e, "identificadores no validos.");
+        }
+        catch (AuthenticationException e)
+        {
+            return handleAuthenticationException(e);
         }
         catch (Exception e)
         {
@@ -165,5 +176,14 @@ public class ApiRest {
         response.put("code", "400");
         response.put("message", ex.getMessage());
         return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+    }
+    @ExceptionHandler(AuthenticationException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ResponseEntity<Map<String, String>> handleAuthenticationException(AuthenticationException ex) {
+        Map<String, String> response = new HashMap<>();
+        response.put("status", "FORBIDDEN");
+        response.put("code", "403");
+        response.put("message", ex.getMessage());
+        return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
     }
 }

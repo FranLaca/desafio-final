@@ -28,8 +28,7 @@ public class SecurityConfig
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authRequest ->
                         authRequest.requestMatchers("/auth/**").permitAll()
-                                .requestMatchers("/api/**").hasRole("TIERRA")
-                                .anyRequest().authenticated()
+                                .requestMatchers("/api/**").authenticated()
                 )
                 .sessionManagement(sessionManager ->
                         sessionManager.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

@@ -20,12 +20,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
-    static SecretKey secretKey = Keys.secretKeyFor(io.jsonwebtoken.SignatureAlgorithm.HS256);
-    static byte[] keyBytes = secretKey.getEncoded();
-    // Imprimir la clave en formato Base64
-    static String base64Key = java.util.Base64.getEncoder().encodeToString(keyBytes);
-
-    private static final  String SECRET_KEY=base64Key;
+    private static final String SECRET_KEY="586E3272357538782F413F4428472B4B6250655368566B597033733676397924";
     public String getToken(UserDetails user){
         return getToken(new HashMap<>(),user);
     }
@@ -38,6 +33,7 @@ public class JwtService {
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(user.getUsername())
+                //.setSubject(String.valueOf(user.getAuthorities()))
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis()+1000*60*24))
                 .signWith(getKey(), SignatureAlgorithm.HS256)
