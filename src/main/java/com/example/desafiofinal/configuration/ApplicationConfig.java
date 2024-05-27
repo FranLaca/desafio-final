@@ -3,6 +3,8 @@ package com.example.desafiofinal.configuration;
 import com.example.desafiofinal.model.Singleton.Nave;
 import com.example.desafiofinal.model.Singleton.Tierra;
 import com.example.desafiofinal.repository.UserRepository;
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.config.ConfigurableBeanFactory;
 import org.springframework.context.annotation.Bean;
@@ -59,5 +61,16 @@ public class ApplicationConfig
     @Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
     public Nave anotherSingletonBean() {
         return new Nave();
+    }
+
+    @Bean
+    public OpenAPI customOpenAPI()
+    {
+        return new OpenAPI()
+                .info(new Info()
+                        .title("JavaPrime API")
+                        .version("0.1")
+                        .description("Api destinada a la comunicacion entre la Tierra y la Nave")
+                );
     }
 }
