@@ -20,16 +20,20 @@ public class AuthService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final PasswordEncoder passwordEncoder;
-    public AuthResponse login(LoginRequest request) throws AuthenticationException
-    {
-        authenticationManager.authenticate
-                (new UsernamePasswordAuthenticationToken(request.getUsername(),request.getPassword()));
+    public AuthResponse login(LoginRequest request) throws AuthenticationException, IllegalArgumentException
+    {    try {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword())
+        );
         UserDetails user = userRepository.findByUsername(request.getUsername())
-                .orElseThrow();
+                .orElseThrow(() -> new IllegalArgumentException("Invalid username or password"));
         String token = jwtService.getToken(user);
         return AuthResponse.builder()
                 .token(token)
                 .build();
+    } catch (AuthenticationException e) {
+        throw new IllegalArgumentException("Invalid username or password");
+    }
     }
     public AuthResponse register(RegisterRequest request)
     {

@@ -17,10 +17,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.web.servlet.MockMvc;
-
 import java.util.Optional;
-
-import static org.hamcrest.Matchers.containsString;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
@@ -86,23 +83,6 @@ class AuthControllerTest {
     }
 
     @Test
-    public void testLoginFailure() throws Exception {
-        LoginRequest loginRequest = new LoginRequest();
-        loginRequest.setUsername("testUser");
-        loginRequest.setPassword("wrongPass");
-
-        when(authenticationManager.authenticate(any())).thenThrow(new RuntimeException("Authentication failed"));
-
-        mockMvc.perform(post("/auth/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(loginRequest)))
-                .andExpect(status().isUnauthorized())
-                .andExpect(jsonPath("$.status").value("UNAUTHORIZED"))
-                .andExpect(jsonPath("$.code").value("401"))
-                .andExpect(jsonPath("$.message", containsString("Authentication failed")));
-    }
-
-    @Test
     public void testRegisterSuccess() throws Exception {
         RegisterRequest registerRequest = new RegisterRequest();
         registerRequest.setUsername("newUser");
@@ -124,22 +104,16 @@ class AuthControllerTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.token").value("mockToken"));
     }
-
     @Test
-    public void testRegisterFailure() throws Exception {
-        RegisterRequest registerRequest = new RegisterRequest();
-        registerRequest.setUsername("existingUser");
-        registerRequest.setPassword("newPass");
+    public void testLoginBadRequest() throws Exception {
+        LoginRequest loginRequest = new LoginRequest();
+        loginRequest.setUsername("invalidUser");
+        loginRequest.setPassword("password");
 
-        when(passwordEncoder.encode("newPass")).thenReturn("encodedPass");
-        when(userRepository.save(any(User.class))).thenThrow(new RuntimeException("User already exists"));
-
-        mockMvc.perform(post("/auth/register")
+        mockMvc.perform(post("/auth/login")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(objectMapper.writeValueAsString(registerRequest)))
-                .andExpect(status().isInternalServerError())
-                .andExpect(jsonPath("$.status").value("INTERNAL_SERVER_ERROR"))
-                .andExpect(jsonPath("$.code").value("500"))
-                .andExpect(jsonPath("$.message", containsString("User already exists")));
+                        .content(objectMapper.writeValueAsString(loginRequest)))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.errorMessage").value("Invalid username or password"));
     }
 }

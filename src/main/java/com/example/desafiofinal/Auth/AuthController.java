@@ -54,11 +54,14 @@ public class AuthController
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
         try {
             return ResponseEntity.ok(authService.login(request));
-        } catch (AuthenticationException e) {
+        } catch (AuthenticationException e)
+        {
             return handleException(HttpStatus.UNAUTHORIZED, "Authentication failed: " + e.getMessage());
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e)
+        {
             return handleException(HttpStatus.BAD_REQUEST, e.getMessage());
-        } catch (HttpMessageNotReadableException e) {
+        } catch (HttpMessageNotReadableException e)
+        {
             return handleException(HttpStatus.BAD_REQUEST, "Revise los campos de la solicitud: " + e.getMessage());
         } catch (Exception e) {
             return handleException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
@@ -69,22 +72,27 @@ public class AuthController
     public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
         try {
             return ResponseEntity.ok(authService.register(request));
-        } catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e)
+        {
             return handleException(HttpStatus.BAD_REQUEST, e.getMessage());
-        } catch (HttpMessageNotReadableException e) {
+        } catch (HttpMessageNotReadableException e)
+        {
             return handleException(HttpStatus.BAD_REQUEST, "Revise los campos de la solicitud: " + e.getMessage());
-        } catch (DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException e)
+        {
             return handleException(HttpStatus.INTERNAL_SERVER_ERROR, "Data integrity violation: " + e.getMessage());
-        } catch (Exception e) {
+        } catch (Exception e)
+        {
             return handleException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
 
-    private ResponseEntity<AuthResponse> handleException(HttpStatus status, String message) {
+    private ResponseEntity<AuthResponse> handleException(HttpStatus status, String message)
+    {
         Map<String, String> response = new HashMap<>();
         response.put("status", status.getReasonPhrase());
         response.put("code", String.valueOf(status.value()));
         response.put("message", message);
-        return ResponseEntity.status(status).body(new AuthResponse("")); // Modify as needed
+        return ResponseEntity.status(status).body(new AuthResponse(null, message));
     }
 }
