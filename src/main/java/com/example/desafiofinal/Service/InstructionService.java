@@ -30,21 +30,19 @@ public class InstructionService implements InitializingBean
         }
     }
     public String executeInstruccion(Instruction instruction) {
-        try {
+
+            InstructionsEnum tipoInstruccion = instruction.getTipoInstruccion();
             if (strategyMap.containsKey(instruction.getTipoInstruccion()))
             {
                 return strategyMap.get(instruction.getTipoInstruccion()).execute();
             } else
             {
-                throw new IllegalArgumentException("Invalid instruction type: " + instruction.getTipoInstruccion());
+                throw new IllegalArgumentException("Invalid instruction type: " + tipoInstruccion);
             }
-        } catch (IllegalArgumentException e)
-        {
-            throw new IllegalArgumentException("Error executing instruction: " + e.getMessage());
-        }
+
     }
     public String obtenerDatos(InstructionsEnum instructionsEnum) {
-        try {
+
             if (strategyMap.containsKey(instructionsEnum))
             {
                 return strategyMap.get(instructionsEnum).obtenerDatos();
@@ -52,11 +50,8 @@ public class InstructionService implements InitializingBean
             {
                 throw new IllegalArgumentException("Invalid instruction type: " + instructionsEnum);
             }
-        } catch (IllegalArgumentException e)
-        {
-            throw new IllegalArgumentException("Error executing instruction: " + e.getMessage());
         }
-    }
+
 
     public void createInstruction(Instruction instruction)
     {

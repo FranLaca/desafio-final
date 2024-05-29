@@ -39,7 +39,7 @@ public class JwtService {
                 .signWith(getKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
-    private Key getKey()
+    Key getKey()
     {
         byte[] keyBytes= Decoders.BASE64.decode(SECRET_KEY);
         return Keys.hmacShaKeyFor(keyBytes);
@@ -76,7 +76,7 @@ public class JwtService {
         return getClaim(token, Claims::getExpiration);
     }
 
-    private boolean isTokenExpired(String token)
+    boolean isTokenExpired(String token)
     {
         return  getExpiration(token).before(new Date());
     }

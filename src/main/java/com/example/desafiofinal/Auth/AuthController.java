@@ -50,75 +50,41 @@ public class AuthController
     }
 
 
-    @GetMapping(value = "/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request)
-    {
+    @PostMapping(value = "/login")
+    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request) {
         try {
             return ResponseEntity.ok(authService.login(request));
-        } catch (AuthenticationException e)
-        {
-            Map<String, String> response = new HashMap<>();
-            response.put("status", "UNAUTHORIZED");
-            response.put("code", "401");
-            response.put("message", "Authentication failed: " + e.getMessage());
-            return new ResponseEntity(response, HttpStatus.UNAUTHORIZED);
-        } catch (IllegalArgumentException e)
-        {
-            Map<String, String> response = new HashMap<>();
-            response.put("status", "BAD_REQUEST");
-            response.put("code", "400");
-            response.put("message", e.getMessage());
-            return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
-        } catch (HttpMessageNotReadableException e)
-        {
-            Map<String, String> response = new HashMap<>();
-            response.put("status", "BAD_REQUEST");
-            response.put("code", "400");
-            response.put("message", "Revise los campos de la solicitud: " + e.getMessage());
-            return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
-        } catch (Exception e)
-        {
-            Map<String, String> response = new HashMap<>();
-            response.put("status", "INTERNAL_SERVER_ERROR");
-            response.put("code", "500");
-            response.put("message", e.getMessage());
-            return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (AuthenticationException e) {
+            return handleException(HttpStatus.UNAUTHORIZED, "Authentication failed: " + e.getMessage());
+        } catch (IllegalArgumentException e) {
+            return handleException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (HttpMessageNotReadableException e) {
+            return handleException(HttpStatus.BAD_REQUEST, "Revise los campos de la solicitud: " + e.getMessage());
+        } catch (Exception e) {
+            return handleException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
     }
+
     @PostMapping(value = "/register")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request)
-    {
-        try
-        {
+    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request) {
+        try {
             return ResponseEntity.ok(authService.register(request));
-        } catch (IllegalArgumentException e)
-        {
-            Map<String, String> response = new HashMap<>();
-            response.put("status", "BAD_REQUEST");
-            response.put("code", "400");
-            response.put("message", e.getMessage());
-            return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
-        } catch (HttpMessageNotReadableException e)
-        {
-            Map<String, String> response = new HashMap<>();
-            response.put("status", "BAD_REQUEST");
-            response.put("code", "400");
-            response.put("message", "Revise los campos de la solicitud: " + e.getMessage());
-            return new ResponseEntity(response, HttpStatus.BAD_REQUEST);
-        } catch (DataIntegrityViolationException e)
-        {
-            Map<String, String> response = new HashMap<>();
-            response.put("status", "INTERNAL_SERVER_ERROR");
-            response.put("code", "500");
-            response.put("message", "Data integrity violation: " + e.getMessage());
-            return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
-        } catch (Exception e)
-        {
-            Map<String, String> response = new HashMap<>();
-            response.put("status", "INTERNAL_SERVER_ERROR");
-            response.put("code", "500");
-            response.put("message", e.getMessage());
-            return new ResponseEntity(response, HttpStatus.INTERNAL_SERVER_ERROR);
+        } catch (IllegalArgumentException e) {
+            return handleException(HttpStatus.BAD_REQUEST, e.getMessage());
+        } catch (HttpMessageNotReadableException e) {
+            return handleException(HttpStatus.BAD_REQUEST, "Revise los campos de la solicitud: " + e.getMessage());
+        } catch (DataIntegrityViolationException e) {
+            return handleException(HttpStatus.INTERNAL_SERVER_ERROR, "Data integrity violation: " + e.getMessage());
+        } catch (Exception e) {
+            return handleException(HttpStatus.INTERNAL_SERVER_ERROR, e.getMessage());
         }
+    }
+
+    private ResponseEntity<AuthResponse> handleException(HttpStatus status, String message) {
+        Map<String, String> response = new HashMap<>();
+        response.put("status", status.getReasonPhrase());
+        response.put("code", String.valueOf(status.value()));
+        response.put("message", message);
+        return ResponseEntity.status(status).body(new AuthResponse("")); // Modify as needed
     }
 }
